@@ -1,16 +1,14 @@
 import {Document, model, Model, Schema} from 'mongoose'
 
 
-interface IPost extends Document {
+export interface IPost extends Document {
     date:{
         value: Date,
-        private: boolean}
+        private: boolean},
     message: {
         value:string,
         private:boolean},
-    userId: {
-            type: string,
-        }
+    userId: string,
 }
 
 
@@ -40,11 +38,10 @@ const postSchema: Schema = new Schema({
     }
 })
 
-const postModel = model<IPost>('Post',postSchema)
+export const PostModel = model<IPost>('Post',postSchema)
 
-export default postModel
 
-const test = new postModel()
+const test = new PostModel()
 
 Object.keys(test).forEach (value =>{
     const test3 = test[value as keyof typeof test]
