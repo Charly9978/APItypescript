@@ -1,6 +1,6 @@
 import {Model,Schema,Document,model} from 'mongoose'
 
-interface Iuser extends Document{
+export interface IUser extends Document{
     firstName:{
         value: string,
         private: boolean,
@@ -32,7 +32,7 @@ interface Iuser extends Document{
     userId: string
 }
 
-interface IIndexUser {
+/* interface IIndexUser {
     firstName:Iuser['firstName'],
     lastName:Iuser['lastName'],
     email:Iuser['email'],
@@ -41,7 +41,7 @@ interface IIndexUser {
     fullName:Iuser['fullName'],
     initials:Iuser['initials'],
     userId:Iuser['userId']
-}
+} */
 
 const userSchema:Schema = new Schema({
     firstName:{
@@ -104,23 +104,22 @@ const userSchema:Schema = new Schema({
 })
 
 
-userSchema.virtual('fullName').get(function(this: Iuser){
+userSchema.virtual('fullName').get(function(this: IUser){
     return {
         value: `${this.firstName.value} ${this.lastName.value}`,
         secret: false
     }
 })
 
-userSchema.virtual('initials').get(function(this: Iuser){
+userSchema.virtual('initials').get(function(this: IUser){
     return {
         value: this.firstName.value.charAt(0).toUpperCase()+this.lastName.value.charAt(0).toUpperCase(),
         private: false
     }
 })
 
-const userModel = model<Iuser>('userModel',userSchema)
+export const UserModel = model<IUser>('userModel',userSchema)
 
-export default userModel
 
 
   

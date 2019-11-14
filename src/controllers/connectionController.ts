@@ -1,5 +1,5 @@
 import { Router, Request, Response} from 'express'
-import userModel from '../models/userModel'
+import {UserModel} from '../models/userModel'
 import auth from '../middleware/auth'
 import bcrypt from 'bcryptjs'
 import registerDataValidation from '../utils/joi'
@@ -42,7 +42,7 @@ class Connection {
             await registerDataValidation(data)
 
             //vérifier si email déjà présent dans la base
-            const userExist = await userModel.findOne({ email: data.email })
+            const userExist = await UserModel.findOne({ email: data.email })
             if (userExist) throw new Error('cet email est déjà utilisé')
 
             //haacher le mot de passe
@@ -50,7 +50,7 @@ class Connection {
             data.password = hashPassword
 
             //enregistrer dans la dataBase avec le status connecté
-            const user = new userModel(data)
+            const user = new UserModel(data)
             await user.save()
 
             //enregistrer dans userConnected
@@ -73,7 +73,7 @@ class Connection {
             const data: dataLoginInterface =req.body
 
             //on vérifie que le mail existe //si ne trouve envoie une erreur??
-            const userFromDB = await userModel.findOne({ email: data.email })
+            const userFromDB = await UserModel.findOne({ email: data.email })
             if(!userFromDB) throw new Error(`cet email n'existe pas`)
             //on compare au mot de passe
              const match = await bcrypt.compare(data.password,userFromDB.password.value)
