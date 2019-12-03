@@ -33,7 +33,7 @@ class UserController {
     
     private getAllUsers = async (req:RequestInterface,res:Response)=>{
         try {
-            const users = await this.model.find()
+            const users = await this.model.find({})
             res.send(users)
         } catch (error) {
             res.status(400).send(error)
@@ -42,7 +42,8 @@ class UserController {
 
     private getUserById = async (req:RequestInterface,res:Response)=>{
         try{
-            const user =await this.model.findById(req.params.id)
+            const user = await this.model.findById(req.params.id)
+            if(user)user.ex
             res.send(user)
         }catch(err){
             res.status(400).send(err)
