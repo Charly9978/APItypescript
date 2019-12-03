@@ -41,14 +41,14 @@ const postSchema: Schema = new Schema({
 export const PostModel = model<IPost>('Post',postSchema)
 
 
-const test = new PostModel()
+/* const test = new PostModel()
 
 Object.keys(test).forEach (value =>{
     const test3 = test[value as keyof typeof test]
     if(test3.private){
         
     }
-})
+}) */
 
 
 

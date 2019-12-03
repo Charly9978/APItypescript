@@ -16,7 +16,7 @@ class UserController {
     private model: mongoose.Model<IUser>
 
     constructor(){
-        this.path = '/post',
+        this.path = '/user',
         this.model =  UserModel
         this.initializedRoutes()
     }
@@ -43,7 +43,7 @@ class UserController {
     private getUserById = async (req:RequestInterface,res:Response)=>{
         try{
             const user = await this.model.findById(req.params.id)
-            if(user)user.ex
+            //si l'utilisateur est autorisé il récupère l'ensemble des datas sauf password sinon juste les données publiques
             res.send(user)
         }catch(err){
             res.status(400).send(err)

@@ -4,6 +4,8 @@ import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
 import 'dotenv/config'
+import {datas} from './utils/posts'
+import {PostModel} from './models/postModel'
 
 class App {
 
@@ -16,6 +18,7 @@ class App {
         this.connectToDataBase()
         this.initializeMiddlewares()
         this.initializeControllers(controllers)
+        //this.addPosts()
     }
 
     private initializeControllers(controllers: Controller[]) {
@@ -41,11 +44,18 @@ class App {
             const{MONGO_USER,MONGO_PASSWORD,MONGO_URL}=process.env
             console.log(MONGO_USER,MONGO_PASSWORD,MONGO_URL)
             await  mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_URL}`,{ useNewUrlParser: true })
-            console.log('connecté à la bese de données')
+            console.log('connecté à la base de données')
             
         } catch (error) {
             console.error(error)
         }
+    }
+
+    private async addPosts(){
+        datas.forEach(async data=>{
+            const newData = new PostModel(data)
+            await newData.save()
+        })
     }
 }
 

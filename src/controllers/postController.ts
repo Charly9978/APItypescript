@@ -10,6 +10,8 @@ import {Router,Request,Response} from 'express'
 import auth from '../middleware/auth'
 import RequestInterface from '../interfaces/request.interface'
 import {PostModel, IPost} from '../models/postModel'
+import {filterData} from '../utils/fliterData'
+
 
 
 
@@ -28,8 +30,8 @@ class PostController {
     
     private initializedRoutes() {
         
-        this.router.get(this.path,auth.userVerification,this.getAllPosts)
-        this.router.get(`${this.path}/:id`,auth.userVerification,this.getPostById)
+        this.router.get(this.path,this.getAllPosts)
+        this.router.get(`${this.path}/:id`,this.getPostById)
         this.router.delete(`${this.path}/:id`,auth.userVerification,this.deletePostById)
         this.router.post(this.path,auth.userVerification,this.postNewPost)
         this.router.put(`${this.path}/:id`,auth.userVerification,this.updatePostById)
@@ -38,16 +40,17 @@ class PostController {
     
     private getAllPosts = async (req:RequestInterface,res:Response)=>{
         try {
-            const posts = await this.model.find()
-            res.send(posts)
+            const posts = await this.model.find({}).orFail(new Error('pas de posts'))
+            const filteredPosts = filterData(posts)
+            res.send(filteredPosts)
         } catch (error) {
-            res.status(400).send(error)
+            res.status(401).send(`${error}`)
         }
     }
 
     private getPostById = async (req:RequestInterface,res:Response)=>{
         try{
-            const post =await this.model.findById(req.params.id)
+            const post =await this.model.findById(req.params.id).orFail(new Error())
             res.send(post)
         }catch(err){
             res.status(400).send(err)

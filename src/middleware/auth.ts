@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import cryptoRandomString from 'crypto-random-string'
-import userModel from '../models/userModel'
+import {UserModel} from '../models/userModel'
 import RequestInterface from '../interfaces/request.interface'
 
 
@@ -39,9 +39,9 @@ class Auth {
     }
     
     private async getUsersConnectedFromDataBase() {
-        const usersConnectedFromDB = await userModel.find({ connected: true })
+        const usersConnectedFromDB = await UserModel.find({ connected: true })
         usersConnectedFromDB.forEach((user) => {
-            this.usersConnected.push({ fullName: user.fullName, _id: user._id, initials: user.initials })
+            this.usersConnected.push({ fullName: user.fullName.value, _id: user._id, initials: user.initials.value })
         })
     }
 
@@ -79,14 +79,14 @@ class Auth {
     public addUserToConnectedUser = async (userId: string) => {
         try {
             if (!this.usersConnected.some(user => user._id == userId)) {
-                const userFromDB = await userModel.findById(userId)
+                const userFromDB = await UserModel.findById(userId)
                 if (userFromDB == null) throw new Error(`id (${userId}) du user n'est pas dans la base de donnée`)
-                userFromDB.connected = true
+                userFromDB.connected.value = true
                 await userFromDB.save()
                 this.usersConnected.push({
-                    fullName: userFromDB.fullName,
+                    fullName: userFromDB.fullName.value,
                     _id: userFromDB._id,
-                    initials: userFromDB.initials
+                    initials: userFromDB.initials.value
                 })
             }
         } catch (error) {
@@ -96,9 +96,9 @@ class Auth {
 
     public deleteUserToConnectedUser = async (userId: string) => {
         try {
-            const userFromDB = await userModel.findById(userId)
+            const userFromDB = await UserModel.findById(userId)
             if (userFromDB == null) throw new Error(`id (${userId}) du user n'est pas dans la base de donnée`)
-            userFromDB.connected = false
+            userFromDB.connected.value = false
             await userFromDB.save()
             const index = this.usersConnected.findIndex(userConnected => userConnected._id == userId)
             if (index == -1) throw new Error(`l'id: ${userId} n'a pas été trouvé dans la liste des utilisateurs connecté`)
