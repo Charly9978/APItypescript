@@ -8,13 +8,17 @@ interface ICrisisRoom{
     phoneNumber: string
 }
 
-export interface IFixDatas extends Document{
+export interface IFixDatas{
     crisisRooms:[ICrisisRoom],
     poiActions: [IAction],
     mairieActions: [IAction],
     neibourActions:[IAction],
     closeAction: [IAction]
 }
+
+export interface IFixDatasDocument extends Document, IFixDatas{}
+
+
 
 const crisisRoomSchema = new Schema({
     name: {
@@ -56,4 +60,4 @@ const fixDatasSchema = new Schema({
 
 })
 
-export const FixDatasModel = model<IFixDatas>('fixDatas',fixDatasSchema)
+export const FixDatasModel = model<IFixDatasDocument>('fixDatas',fixDatasSchema)

@@ -1,6 +1,6 @@
 import {Document, model, Model, Schema} from 'mongoose'
 
-export interface IAction extends Document{
+export interface IAction{
     description:string,
     deadlineDate: Date,
     deadLineTime: number,
@@ -8,19 +8,7 @@ export interface IAction extends Document{
     closeDate:Date,
 }
 
-
-export interface IIncident extends Document {
-    date:Date,
-    desciption: string,
-    isPoi: boolean,
-    poiDate?: Date,
-    crisisRoom:string,
-    exerciceMode: boolean,
-    personnToAlert: string[],
-    isEnd:boolean,
-    EndDate:Date,
-    actions: IAction[]
-}
+export interface IActionDocument extends Document,IAction{}
 
 export const actionSchema:Schema = new Schema({
     description:{
@@ -45,6 +33,24 @@ export const actionSchema:Schema = new Schema({
     },
 
 })
+
+
+
+export interface IIncident{
+    date:Date,
+    desciption: string,
+    isPoi: boolean,
+    poiDate?: Date,
+    crisisRoom:string,
+    exerciceMode: boolean,
+    personnToAlert: string[],
+    isEnd:boolean,
+    EndDate:Date,
+    actions: IAction[]
+}
+
+export interface IIncidentDocument extends IIncident,Document {}
+
 
 export const incidentSchema:Schema = new Schema({
     date:{
@@ -80,4 +86,4 @@ export const incidentSchema:Schema = new Schema({
     actions: [actionSchema]
 })
 
-export const IncidentModel = model<IIncident>('incident',incidentSchema)
+export const IncidentModel = model<IIncidentDocument>('incident',incidentSchema)
