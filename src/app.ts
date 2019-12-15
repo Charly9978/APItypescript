@@ -3,6 +3,7 @@ import Controller from './interfaces/controller.interface'
 import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
+import cors from 'cors'
 import 'dotenv/config'
 import {datas} from './utils/posts'
 import {PostModel} from './models/postModel'
@@ -18,7 +19,7 @@ class App {
         this.connectToDataBase()
         this.initializeMiddlewares()
         this.initializeControllers(controllers)
-        //this.addPosts()
+        this.addPosts()
     }
 
     private initializeControllers(controllers: Controller[]) {
@@ -28,8 +29,9 @@ class App {
     }
 
     private initializeMiddlewares(){
+        this.app.use(cors({origin:'http://localhost:8080',credentials:true}))
         this.app.use(bodyParser.json())
-        this.app.use(bodyParser.urlencoded({ extended: false }))
+        this.app.use(bodyParser.urlencoded({ extended: true }))
         this.app.use(cookieParser())    
     }
 
@@ -43,7 +45,9 @@ class App {
         try {
             const{MONGO_USER,MONGO_PASSWORD,MONGO_URL}=process.env
             console.log(MONGO_USER,MONGO_PASSWORD,MONGO_URL)
-            await  mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_URL}`,{ useNewUrlParser: true })
+            //await  mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_URL}`,{ useNewUrlParser: true })
+            await  mongoose.connect(`mongodb://mongo/messages`,{ useNewUrlParser: true })
+
             console.log('connecté à la base de données')
             
         } catch (error) {

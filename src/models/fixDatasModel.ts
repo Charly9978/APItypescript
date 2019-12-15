@@ -12,8 +12,8 @@ export interface IFixDatas{
     crisisRooms:[ICrisisRoom],
     poiActions: [IAction],
     mairieActions: [IAction],
-    neibourActions:[IAction],
-    closeAction: [IAction]
+    neighbourActions:[IAction],
+    closeActions: [IAction]
 }
 
 export interface IFixDatasDocument extends Document, IFixDatas{}
@@ -49,11 +49,11 @@ const fixDatasSchema = new Schema({
         type:[actionSchema],
         required:true
     },
-    neibourghActions:{
+    neighbourActions:{
         type:[actionSchema],
         required:true
     },
-    closeAction: {
+    closeActions: {
         type:[actionSchema],
         required:true
     }

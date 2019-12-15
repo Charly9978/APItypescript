@@ -1,36 +1,19 @@
 import {Model,Schema,Document,model} from 'mongoose'
 
-export interface IUser extends Document{
-    firstName:{
-        value: string,
-        private: boolean,
-    },
-    lastName:{
-        value: string,
-        private:boolean
-    },
-    email:{
-        value: string,
-        private: boolean
-    },
-    password:{
-        value: string,
-        private: boolean
-    },
-    connected:{
-        value: boolean,
-        private: boolean
-    },
-    fullName:{
-        value: string,
-        private: boolean
-    },
-    initials:{
-        value: string,
-        private: boolean
-    },
+
+interface IUser{
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+    connected: boolean,
+    fullName: string,
+    initials: string,
     userId: string
 }
+
+
+export interface IUserDocument extends IUser, Document {}
 
 /* interface IIndexUser {
     firstName:Iuser['firstName'],
@@ -45,58 +28,28 @@ export interface IUser extends Document{
 
 const userSchema:Schema = new Schema({
     firstName:{
-       value:{ 
             type:String,
             required: true,
             min:4
-       },
-       private:{
-           type:Boolean,
-           default: false
-       }
     },
     lastName:{
-        value:{ 
             type:String,
             required: true,
             min:3
-       },
-       private:{
-           type:Boolean,
-           default: false
-       }
     },
     email:{
-        value:{ 
             type:String,
             required: true,
             min:6
-       },
-       private:{
-           type:Boolean,
-           default: true
-       }
     },
     password:{
-        value:{ 
             type:String,
             required: true,
             min:6
-       },
-       private:{
-           type:Boolean,
-           default: true
-       }
     },
     connected:{
-        value:{ 
             type:Boolean,
             required: false,
-       },
-       private:{
-           type:Boolean,
-           default: false
-       }
     },
     userId:{
         type: String,
@@ -104,21 +57,21 @@ const userSchema:Schema = new Schema({
 })
 
 
-userSchema.virtual('fullName').get(function(this: IUser){
+userSchema.virtual('fullName').get(function(this: IUserDocument){
     return {
-        value: `${this.firstName.value} ${this.lastName.value}`,
+        value: `${this.firstName} ${this.lastName}`,
         secret: false
     }
 })
 
-userSchema.virtual('initials').get(function(this: IUser){
+userSchema.virtual('initials').get(function(this: IUserDocument){
     return {
-        value: this.firstName.value.charAt(0).toUpperCase()+this.lastName.value.charAt(0).toUpperCase(),
+        value: this.firstName.charAt(0).toUpperCase()+this.lastName.charAt(0).toUpperCase(),
         private: false
     }
 })
 
-export const UserModel = model<IUser>('userModel',userSchema)
+export const UserModel = model<IUserDocument>('userModel',userSchema)
 
 
 

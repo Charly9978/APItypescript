@@ -41,7 +41,7 @@ class Auth {
     private async getUsersConnectedFromDataBase() {
         const usersConnectedFromDB = await UserModel.find({ connected: true })
         usersConnectedFromDB.forEach((user) => {
-            this.usersConnected.push({ fullName: user.fullName.value, _id: user._id, initials: user.initials.value })
+            this.usersConnected.push({ fullName: user.fullName, _id: user._id, initials: user.initials })
         })
     }
 
@@ -53,13 +53,17 @@ class Auth {
     public userVerification = async (req: RequestInterface, res: Response, next: NextFunction) => {
         try {
             const token = req.headers['authorization']
+            console.log(`token: ${token}`)
             const cookies = req.cookies
+            console.log(`cookie: ${cookies}`)
             const jwtToken = this.modifyIncomingToken(token)
             const userId = await this.checkToken(jwtToken, cookies)
+            console.log(`userId:${userId}`)
             req.userId = userId
             await this.addUserToConnectedUser(userId)
             next()
         } catch (error) {
+            console.error(error)
             res.status(401).send(error)
         }
     }
@@ -81,12 +85,12 @@ class Auth {
             if (!this.usersConnected.some(user => user._id == userId)) {
                 const userFromDB = await UserModel.findById(userId)
                 if (userFromDB == null) throw new Error(`id (${userId}) du user n'est pas dans la base de donnée`)
-                userFromDB.connected.value = true
+                userFromDB.connected = true
                 await userFromDB.save()
                 this.usersConnected.push({
-                    fullName: userFromDB.fullName.value,
+                    fullName: userFromDB.fullName,
                     _id: userFromDB._id,
-                    initials: userFromDB.initials.value
+                    initials: userFromDB.initials
                 })
             }
         } catch (error) {
@@ -98,7 +102,7 @@ class Auth {
         try {
             const userFromDB = await UserModel.findById(userId)
             if (userFromDB == null) throw new Error(`id (${userId}) du user n'est pas dans la base de donnée`)
-            userFromDB.connected.value = false
+            userFromDB.connected = false
             await userFromDB.save()
             const index = this.usersConnected.findIndex(userConnected => userConnected._id == userId)
             if (index == -1) throw new Error(`l'id: ${userId} n'a pas été trouvé dans la liste des utilisateurs connecté`)
@@ -121,6 +125,8 @@ class Auth {
                 httpOnly: true,/*,
                 secure:false,
                 sameSite : false,*/
+                domain:'fr.localhost.com',
+                path:'/',
                 expires: new Date(Date.now() + 3600000),
 
             }

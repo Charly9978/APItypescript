@@ -12,7 +12,7 @@ class FixDatasController {
     private model: mongoose.Model<IFixDatasDocument>
 
     constructor(){
-        this.path = '/incident',
+        this.path = '/fixDatas',
         this.model =  FixDatasModel
         this.initializedRoutes()
     }
@@ -21,16 +21,16 @@ class FixDatasController {
         
         this.router.get(this.path,this.getFixDatas)
         this.router.post(this.path,this.createFixDatas)
-        this.router.put(`${this.path}/:id`,this.updateFixeDatas)
+        this.router.put(`${this.path}`,this.updateFixeDatas)
     }
 
     
     private getFixDatas = async (req:Request,res:Response)=>{
         try {
-            const fixDatasArray = await this.model.find({}).orFail(new Error('pas de posts'))
+            const fixDatasArray = await this.model.find({}).orFail(new Error('pas de fixdatas'))
             res.send(fixDatasArray[0])
         } catch (error) {
-            res.status(401).send(`${error}`)
+            res.status(404).send(`${error}`)
         }
     }
 

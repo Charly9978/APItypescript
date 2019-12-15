@@ -1,0 +1,28 @@
+version: '2.1'
+
+services:
+  apitest:
+    image: apitypescript
+    restart: always
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3000:3000
+    command: npm run dev
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    links: 
+      - mongo
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    restart: always
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081

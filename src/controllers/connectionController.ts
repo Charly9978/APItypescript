@@ -38,6 +38,8 @@ class Connection {
         try {
             const data: dataRegisterInterface = req.body
 
+            console.log(data)
+
             //vérifier le nom, prenom, le mot de pass
             await registerDataValidation(data)
 
@@ -62,7 +64,7 @@ class Connection {
             res.cookie(cookie.key, cookie.value, cookie.option).send({ token })
 
         } catch (error) {
-            res.status(400).send(error)
+            res.status(400).send(`${error}`)
             
         }
     }
@@ -76,14 +78,14 @@ class Connection {
             const userFromDB = await UserModel.findOne({ email: data.email })
             if(!userFromDB) throw new Error(`cet email n'existe pas`)
             //on compare au mot de passe
-             const match = await bcrypt.compare(data.password,userFromDB.password.value)
+             const match = await bcrypt.compare(data.password,userFromDB.password)
              if(!match) throw new Error('erreur de password')
             //on créer le token et le cookie
             const {cookie,token} = await auth.createTokenAndCookie(userFromDB._id)
-            res.cookie(cookie.key,cookie.value,cookie.option).send(token)
+            res.cookie(cookie.key,cookie.value,cookie.option).send({token})
 
         } catch (error) {
-            res.status(400).send(error) 
+            res.status(400).send(`${error}`) 
         }
     }
 

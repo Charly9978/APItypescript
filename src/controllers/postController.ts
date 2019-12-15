@@ -23,7 +23,7 @@ class PostController {
     private model: mongoose.Model<IPost>
 
     constructor(){
-        this.path = '/post',
+        this.path = '/messages',
         this.model =  PostModel
         this.initializedRoutes()
     }
@@ -41,8 +41,8 @@ class PostController {
     private getAllPosts = async (req:RequestInterface,res:Response)=>{
         try {
             const posts = await this.model.find({}).orFail(new Error('pas de posts'))
-            const filteredPosts = filterData(posts)
-            res.send(filteredPosts)
+            //const filteredPosts = filterData(posts)
+            res.send(posts)
         } catch (error) {
             res.status(401).send(`${error}`)
         }

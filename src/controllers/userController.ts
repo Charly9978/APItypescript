@@ -4,7 +4,7 @@ import * as mongoose from 'mongoose'
 import {Router,Request,Response} from 'express'
 import auth from '../middleware/auth'
 import RequestInterface from '../interfaces/request.interface'
-import {UserModel, IUser} from '../models/userModel'
+import {UserModel, IUserDocument} from '../models/userModel'
 
 
 
@@ -13,10 +13,10 @@ class UserController {
 
     public router:Router = Router()
     public path: string
-    private model: mongoose.Model<IUser>
+    private model: mongoose.Model<IUserDocument>
 
     constructor(){
-        this.path = '/user',
+        this.path = '/users',
         this.model =  UserModel
         this.initializedRoutes()
     }
