@@ -3,7 +3,6 @@ import {Document, model, Model, Schema} from 'mongoose'
 export interface IAction{
     description:string,
     deadlineDate: Date,
-    deadLineTime: number,
     isClose:boolean,
     closeDate:Date,
 }
@@ -17,10 +16,6 @@ export const actionSchema:Schema = new Schema({
     },
     deadlineDate: {
         type:Date,
-        required:false
-    },
-    deadLineTime: {
-        type:String,
         required:false
     },
     isClose:{
@@ -38,14 +33,16 @@ export const actionSchema:Schema = new Schema({
 
 export interface IIncident{
     date:Date,
-    desciption: string,
+    description: string,
+    lieu?: string,
     isPoi: boolean,
     poiDate?: Date,
-    crisisRoom:string,
+    crisisRoom?:string,
+    needContactMairie: boolean,
+    needContactNeighbour: boolean,
     exerciceMode: boolean,
-    personnToAlert: string[],
     isEnd:boolean,
-    EndDate:Date,
+    endDate:Date,
     actions: IAction[]
 }
 
@@ -56,9 +53,13 @@ export const incidentSchema:Schema = new Schema({
     date:{
         type:Date,
         },
-    desciption: {
+    description: {
         type: String
         },
+    lieu: {
+        type: String,
+        required:false
+    },
     isPoi: {
         type:Boolean,
         default: false
@@ -72,18 +73,25 @@ export const incidentSchema:Schema = new Schema({
     exerciceMode: {
         type: Boolean
         },
-    personnToAlert: {
-        type: [String],
-        default:[]                 
+    needContactMairie: {
+            type: Boolean,
+            default: undefined
         },
+    needContactNeighbour: {
+        type: Boolean,
+        defaul: undefined
+    },
     isEnd:{
         type: Boolean,
         default:false
         },
-    EndDate:{
-        type: Date
+    endDate:{
+        type: Date,
         },
-    actions: [actionSchema]
+    actions: {
+        type:[actionSchema],
+        default:[]
+    },
 })
 
 export const IncidentModel = model<IIncidentDocument>('incident',incidentSchema)

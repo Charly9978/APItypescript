@@ -1,55 +1,55 @@
 import * as mongoose from 'mongoose'
-import {Router,Request,Response} from 'express'
 import auth from '../middleware/auth'
-import RequestInterface from '../interfaces/request.interface'
-import {PlannedTodos, IPlannedTodoDocument} from '../models/plannedTodoModel'
+import {Router,Request,Response} from 'express'
+import {TodosModel, ITodoDocument} from '../models/todoModel'
 
 
 
-class PlannedTodosController {
+class TodoController {
     
 
     public router:Router = Router()
     public path: string
-    private model: mongoose.Model<IPlannedTodoDocument>
+    private model: mongoose.Model<ITodoDocument>
 
     constructor(){
-        this.path = '/plannedTodos',
-        this.model =  PlannedTodos
+        this.path = '/todo',
+        this.model =  TodosModel
         this.initializedRoutes()
     }
     
     private initializedRoutes() {
         
-        this.router.get(this.path,auth.userVerification,this.getAllTodos)
+        this.router.get(`${this.path}/byIncident/:id`,auth.userVerification,this.getAllTodosByIncidentId)
         this.router.get(`${this.path}/:id`,auth.userVerification,this.getTodoById)
-        this.router.delete(`${this.path}/:id`,auth.userVerification,this.deletetTodoById)
+        this.router.delete(`${this.path}/:id`,auth.userVerification,this.deleteTodoById)
         this.router.post(this.path,auth.userVerification,this.postNewTodo)
         this.router.put(`${this.path}/:id`,auth.userVerification,this.updateTodoById)
     }
 
     
-    private getAllTodos = async (req:RequestInterface,res:Response)=>{
+    private getAllTodosByIncidentId = async (req:Request,res:Response)=>{
         try {
-            const todos = await this.model.find({}).orFail(new Error('pas de todos'))
+            const incidentId = req.params.id
+            const todos = await this.model.find({incidentId}).orFail(new Error("pas de todos"))
             res.send(todos)
         } catch (error) {
-            res.status(400).send(error)
+            res.status(401).send(`${error}`)
         }
     }
 
-    private getTodoById = async (req:RequestInterface,res:Response)=>{
+    private getTodoById = async (req:Request,res:Response)=>{
         try{
-            const todo = await this.model.findById(req.params.id).orFail(new Error('pas de todo pour cet id'))
+            const todo =await this.model.findById(req.params.id).orFail(new Error())
             res.send(todo)
         }catch(err){
             res.status(400).send(err)
         }
     }
 
-    private deletetTodoById = async (req:RequestInterface,res:Response)=>{
+    private deleteTodoById = async (req:Request,res:Response)=>{
         try {
-            const todo = await this.model.findByIdAndDelete(req.params.id).orFail(new Error('pas de todo pour cet id'))
+            const todo = await this.model.findByIdAndDelete(req.params.id)
             res.send(`sucess deleted: ${todo}`)
             
         } catch (error) {
@@ -57,7 +57,7 @@ class PlannedTodosController {
         }
     }
 
-    private postNewTodo = async (req:RequestInterface,res:Response)=>{
+    private postNewTodo = async (req:Request,res:Response)=>{
         try {
             console.log(req)
             const newTodo = req.body
@@ -69,7 +69,7 @@ class PlannedTodosController {
         }
     }
 
-    private updateTodoById = async (req:RequestInterface,res: Response)=>{
+    private updateTodoById = async (req:Request,res: Response)=>{
         try {
             const newTodo = req.body
             const oldTodoId = req.params.id
@@ -85,6 +85,6 @@ class PlannedTodosController {
 
 }
 
-const plannedTodosController = new PlannedTodosController()
+const todoController = new TodoController()
 
-export default plannedTodosController
+export default todoController

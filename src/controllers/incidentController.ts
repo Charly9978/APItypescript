@@ -29,7 +29,7 @@ class IncidentController {
     
     private getAllIncidents = async (req:Request,res:Response)=>{
         try {
-            const incidents = await this.model.find({}).orFail(new Error('pas de posts'))
+            const incidents = await this.model.find({}).orFail(new Error("pas de Pas d'incident"))
             res.send(incidents)
         } catch (error) {
             res.status(401).send(`${error}`)
@@ -71,10 +71,8 @@ class IncidentController {
         try {
             const newIncident = req.body
             const oldIncidentId = req.params.id
-            const incidentToUpdate = await this.model.findById(oldIncidentId)
-            if(!incidentToUpdate) throw new Error(`l'élément à mettre à jour n'existe pas`)
-            const updateElement = await incidentToUpdate.update(newIncident)
-            res.status(200).send(updateElement)
+            const updatedIncident = await this.model.findByIdAndUpdate(oldIncidentId,newIncident,{new:true})
+            res.status(200).send(updatedIncident)
         } catch (error) {
             res.status(400).send(error)
         }

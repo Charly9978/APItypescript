@@ -21,10 +21,10 @@ class CrisisRoomsController {
     
     private initializedRoutes() {
         
-        this.router.get(this.path,auth.userVerification,this.getAllCrisisRooms)
+        this.router.get(this.path,this.getAllCrisisRooms)
         this.router.get(`${this.path}/:id`,auth.userVerification,this.getCrisisRoomById)
         this.router.delete(`${this.path}/:id`,auth.userVerification,this.deletetCrisisRoomById)
-        this.router.post(this.path,auth.userVerification,this.postNewCrisisRoom)
+        this.router.post(this.path,this.postNewCrisisRoom)
         this.router.put(`${this.path}/:id`,auth.userVerification,this.updateCrisisRoomById)
     }
 
@@ -63,6 +63,7 @@ class CrisisRoomsController {
             const newCrisisRoom = req.body
             const createdCrisisRoom = new this.model(newCrisisRoom)
             await createdCrisisRoom.save()
+            console.log(createdCrisisRoom)
             res.status(200).send(createdCrisisRoom)
         } catch (error) {
             res.status(400).send(error)
@@ -73,9 +74,8 @@ class CrisisRoomsController {
         try {
             const newCrisisRoom = req.body
             const oldCrisisRoomId = req.params.id
-            const crisisRoomToUpdate = await this.model.findById(oldCrisisRoomId)
-            if(!crisisRoomToUpdate) throw new Error(`l'élément à mettre à jour n'existe pas`)
-            const updateCrisisRoom = await crisisRoomToUpdate.update(newCrisisRoom)
+            const updateCrisisRoom = await this.model.findByIdAndUpdate(oldCrisisRoomId,newCrisisRoom,{new:true})
+            console.log('updateRoom:',updateCrisisRoom)
             res.status(200).send(updateCrisisRoom)
         } catch (error) {
             res.status(400).send(error)

@@ -17,7 +17,7 @@ const plannedTodoSchema:Schema = new Schema({
     },
     deadLineTime: {
         type:String,
-        required:false
+        required:true
     },
     isClose:{
         type: Boolean,
@@ -35,5 +35,5 @@ const plannedTodoSchema:Schema = new Schema({
 
 })
 
-export const PlannedTodos = model<IPlannedTodoDocument>('todos',plannedTodoSchema)
+export const PlannedTodos = model<IPlannedTodoDocument>('plannedTodos',plannedTodoSchema)
 
