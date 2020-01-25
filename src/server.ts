@@ -7,6 +7,7 @@ import transmissionController from './controllers/incidentController'
 import crisisRoomsController from './controllers/crisisRoomController'
 import plannedTodosController from './controllers/plannedTodosController'
 import todosController from './controllers/todosController'
+import incidentStatusController from './controllers/incidentStatusController'
 
 const controllers = [
     postController,
@@ -15,7 +16,8 @@ const controllers = [
     transmissionController,
     crisisRoomsController,
     plannedTodosController,
-    todosController
+    todosController,
+    incidentStatusController
 ]
 
 const server = new App(controllers,3000)

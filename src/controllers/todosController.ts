@@ -24,6 +24,7 @@ class TodoController {
         this.router.get(`${this.path}/:id`,auth.userVerification,this.getTodoById)
         this.router.delete(`${this.path}/:id`,auth.userVerification,this.deleteTodoById)
         this.router.post(this.path,auth.userVerification,this.postNewTodo)
+        this.router.post(`${this.path}/many`,auth.userVerification,this.postNewTodos)
         this.router.put(`${this.path}/:id`,auth.userVerification,this.updateTodoById)
     }
 
@@ -31,7 +32,8 @@ class TodoController {
     private getAllTodosByIncidentId = async (req:Request,res:Response)=>{
         try {
             const incidentId = req.params.id
-            const todos = await this.model.find({incidentId}).orFail(new Error("pas de todos"))
+            const todos = await this.model.find({incidentId}).sort({deadLineDate:'asc'}).orFail(new Error("pas de todos"))
+            console.log(todos)
             res.send(todos)
         } catch (error) {
             res.status(401).send(`${error}`)
@@ -52,6 +54,16 @@ class TodoController {
             const todo = await this.model.findByIdAndDelete(req.params.id)
             res.send(`sucess deleted: ${todo}`)
             
+        } catch (error) {
+            res.status(400).send(error)
+        }
+    }
+
+    private postNewTodos = async (req:Request,res:Response)=>{
+        try {
+            const newTodos = req.body
+            const createdTodos = await this.model.insertMany(newTodos)
+            res.status(200).send(createdTodos)
         } catch (error) {
             res.status(400).send(error)
         }

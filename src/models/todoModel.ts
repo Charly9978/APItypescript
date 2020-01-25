@@ -5,6 +5,7 @@ interface ITodo {
     incidentId:string,
     deadLineDate: Date,
     isClose:boolean,
+    isLate: boolean,
     closeDate?:Date,
 }
 
@@ -22,6 +23,10 @@ const todoSchema:Schema = new Schema({
     deadLineDate: {
         type:Date,
         required:true
+    },
+    isLate:{
+        type: Boolean,
+        default: false
     },
     isClose:{
         type: Boolean,
