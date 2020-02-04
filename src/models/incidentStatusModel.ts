@@ -7,9 +7,11 @@ interface IIncidentStatus {
     nom_du_redacteur:string,
     telephone:string,
     date_status:Date,
-    incident_termine:boolean,
-    incident_maitrise:boolean,
-    incident_en_evolution:boolean,
+    evolution:string,
+    en_evolution:boolean,
+    maitrise:boolean,
+    termine:boolean,
+    impact:string,
     pas_de_risque_exterieur:boolean,
     risque_toxique_explosion:boolean,
     effet_a_exterieur:boolean,
@@ -65,9 +67,27 @@ const incidentStatusSchema:Schema = new Schema({
         type: String,
     },
     date_status:{type: Date},
-    incident_termine:{type: Boolean},
-    incident_maitrise:{type: Boolean},
-    incident_en_evolution:{type: Boolean},
+    evolution:{
+        type: String,
+        default: "en_evolution"
+        },
+    en_evolution:{
+        type: Boolean,
+        required: true
+    },
+    maitrise:{
+        type: Boolean,
+        required: true
+    },
+    termine:{
+        type: Boolean,
+        required: true
+    },
+    
+    impact:{
+        type: String,
+        required: true
+        },
     pas_de_risque_exterieur:{
         type: Boolean,
         required: true
@@ -90,7 +110,7 @@ const incidentStatusSchema:Schema = new Schema({
         },
     quantite_produit: {
         type: String,
-        required: true
+        required: false
         },
     produit_en_cause: {
         type: String,

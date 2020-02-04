@@ -37,7 +37,7 @@ export interface IIncident{
     lieu?: string,
     isPoi: boolean,
     poiDate?: Date,
-    crisisRoom?:string,
+    crisisRoomId?:string,
     needContactMairie: boolean,
     needContactNeighbour: boolean,
     exerciceMode: boolean,
@@ -67,7 +67,7 @@ export const incidentSchema:Schema = new Schema({
     poiDate: {
         type: Date
         },
-    crisisRoom:{
+    crisisRoomId:{
         type: String
         },
     exerciceMode: {

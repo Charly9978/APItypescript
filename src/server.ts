@@ -8,6 +8,7 @@ import crisisRoomsController from './controllers/crisisRoomController'
 import plannedTodosController from './controllers/plannedTodosController'
 import todosController from './controllers/todosController'
 import incidentStatusController from './controllers/incidentStatusController'
+import factoryController from './controllers/factoryController'
 
 const controllers = [
     postController,
@@ -17,7 +18,8 @@ const controllers = [
     crisisRoomsController,
     plannedTodosController,
     todosController,
-    incidentStatusController
+    incidentStatusController,
+    factoryController
 ]
 
 const server = new App(controllers,3000)
